@@ -1,0 +1,80 @@
+/* Estilos para o Layout Principal do Admin */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.sidebar-header h2 { color: #fff; }
+
+.close-btn { background: none; border: none; color: #94a3b8; cursor: pointer; }
+
+.sidebar-nav .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #94a3b8;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.sidebar-nav .nav-item:hover { background-color: #334155; color: #fff; }
+.sidebar-nav .nav-item.active { background-color: var(--primary-color); color: #fff; }
+
+.main-content {
+  flex-grow: 1;
+  background-color: var(--background-color);
+  padding-left: 0;
+  transition: padding-left 0.3s ease;
+}
+
+.header {
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.menu-btn { background: none; border: none; cursor: pointer; }
+.header-right .user-info { display: flex; align-items: center; gap: 1rem; }
+
+.page-content {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .sidebar { transform: translateX(0); position: static; }
+  .close-btn, .menu-btn { display: none; }
+  .main-content { padding-left: 250px; }
+}
