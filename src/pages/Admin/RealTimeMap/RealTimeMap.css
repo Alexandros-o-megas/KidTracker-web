@@ -1,0 +1,34 @@
+/* Ficheiro: src/components/Admin/RealTimeMap/RealTimeMap.css */
+
+.real-time-map {
+  border-radius: 8px;
+  overflow: hidden; /* Garante que o mapa não ultrapassa as bordas arredondadas */
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+/* O Leaflet adiciona esta classe ao container do mapa */
+.leaflet-container {
+  font-family: 'Inter', sans-serif; /* Garante que a fonte do popup é a mesma do resto do site */
+}
+
+/* Estilização do Popup que aparece ao clicar no marcador */
+.veiculo-popup h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.veiculo-popup p {
+  margin: 0.4rem 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.veiculo-popup p strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}

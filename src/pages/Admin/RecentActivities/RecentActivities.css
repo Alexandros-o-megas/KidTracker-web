@@ -1,0 +1,48 @@
+.recent-activities ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activity-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Cores por tipo de atividade */
+.icon-trip_start { background-color: #dbeafe; color: #3b82f6; }
+.icon-new_driver { background-color: #dcfce7; color: #16a34a; }
+.icon-speed_alert { background-color: #fee2e2; color: #ef4444; }
+
+.activity-content {
+  flex-grow: 1;
+}
+
+.activity-text {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.activity-time {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}

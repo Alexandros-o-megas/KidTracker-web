@@ -4,7 +4,7 @@ import { veiculoService } from '../../../services/veiculoService';
 import DataTable from '../../../components/Common/DataTable/DataTable';
 import Button from '../../../components/Common/Button/Button';
 import Modal from '../../../components/Common/Modal/Modal';
-import VeiculoForm from '../../../components/Admin/VeiculoForm/VeiculoForm';
+import VeiculoForm from '../../../pages/Admin/VeiculoForm/VeiculoForm';
 import './Veiculos.css';
 
 const Veiculos = () => {

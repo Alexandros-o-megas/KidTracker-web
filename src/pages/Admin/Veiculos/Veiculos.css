@@ -1,0 +1,134 @@
+/* Ficheiro: src/pages/Admin/Veiculos/Veiculos.css */
+
+.veiculos-page {
+}
+
+/* 1. Cabeçalho da Página (Título e Botão de Adicionar) */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinha no topo se o texto tiver várias linhas */
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-content h1 {
+  font-size: 1.875rem; /* ~30px */
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.header-content p {
+  font-size: 0.875rem; /* ~14px */
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* 2. Barra de Ferramentas (Pesquisa e Filtros) */
+.page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.search-box:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+}
+
+.search-box svg {
+  color: var(--text-secondary);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.875rem;
+  background: transparent;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: #f8fafc;
+}
+
+/* 3. Tabela de Dados (Personalização para Veículos) */
+
+/* Coluna de informação do Veículo */
+.veiculo-info .matricula {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.veiculo-info .modelo {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* 'Badge' de Status */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem; /* ~12px */
+  font-weight: 500;
+  border-radius: 9999px; /* Efeito "pílula" */
+  text-transform: capitalize;
+}
+
+.status-badge::before {
+  content: "•";
+  margin-right: 0.4rem;
+}
+
+/* Cores para os diferentes status - alinhe estes nomes com os dados do seu backend */
+.status-badge.ativo, .status-badge.active {
+  background-color: #dcfce7; /* Verde claro */
+  color: #166534; /* Verde escuro */
+}
+.status-badge.manutencao, .status-badge.maintenance {
+  background-color: #feefc2; /* Amarelo claro */
+  color: #7b4412; /* Amarelo escuro */
+}
+.status-badge.inativo, .status-badge.inactive {
+  background-color: #f1f5f9; /* Cinza claro */
+  color: #475569; /* Cinza escuro */
+}
+
+
+/* 4. Coluna de Ações */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Os botões de ícone (Editar, Eliminar, Rastrear) já estão estilizados no global.css
+   Podemos adicionar ajustes se necessário aqui. */
