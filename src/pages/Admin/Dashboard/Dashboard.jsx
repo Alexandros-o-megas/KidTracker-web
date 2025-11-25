@@ -14,7 +14,7 @@ import { dashboardService } from '../../../services/dashboardService.js';
 import RealTimeMap from '../../../pages/Admin/RealTimeMap/RealTimeMap.jsx';
 import StatsCard from '../../../components/Common/StatsCard/StatsCard.jsx';
 import RecentActivities from '../../../pages/Admin/RecentActivities/RecentActivities.jsx';
-import './Dashboard.css'; // Terá de criar este ficheiro também!
+import './Dashboard.css'; 
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -27,25 +27,26 @@ const Dashboard = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  // No ficheiro src/pages/Admin/Dashboard/Dashboard.jsx (VERSÃO FINAL 100% REAL)
-useEffect(() => {
+  useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        // Remove os dados de mock
-        // Descomenta a chamada real à API
+        setLoading(true); // Inicia o carregamento
         const data = await dashboardService.getStats();
-        setStats(data);
+        setStats(data); // Atualiza o estado com os dados da API
       } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
+        // Em caso de erro, podemos manter os valores a zero
       } finally {
-        setLoading(false);
+        setLoading(false); // Termina o carregamento, independentemente do resultado
       }
     };
+    
     loadDashboardData();
-  }, []); // O array vazio garante que isto só executa uma vez
+    
+  }, []); 
 
   if (loading) {
-    return <div className="loading">A carregar...</div>;
+    return <div className="loading">A carregar dados do dashboard...</div>;
   }
 
   return (
