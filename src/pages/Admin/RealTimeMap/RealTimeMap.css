@@ -4,7 +4,7 @@
   border-radius: 8px;
   overflow: hidden; /* Garante que o mapa não ultrapassa as bordas arredondadas */
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
+  box-shadow: va r(--shadow);
 }
 
 /* O Leaflet adiciona esta classe ao container do mapa */

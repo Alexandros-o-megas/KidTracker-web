@@ -17,5 +17,11 @@ export const authService = {
   async getProfile() {
     const response = await api.get('/auth/profile');
     return response.data;
+  },
+
+  async register(registerData) {
+    // registerData deve ser um objeto com { nome, email, senha }
+    const response = await api.post('/auth/register', registerData);
+    return response.data;
   }
 };

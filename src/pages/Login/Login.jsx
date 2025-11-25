@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 import { Bus, AlertCircle } from 'lucide-react';
 import './Login.css';
@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,13 +74,17 @@ const Login = () => {
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="login-btn"
             disabled={loading}
           >
             {loading ? 'A entrar...' : 'Entrar'}
           </button>
+          <div className="register-link">
+            <span>Não tem uma conta? </span>
+            <Link to="/register">Cadastre-se aqui</Link>
+          </div>
         </form>
       </div>
     </div>

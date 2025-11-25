@@ -8,7 +8,7 @@ import Login from './pages/Login/Login.jsx';
 import Dashboard from './pages/Admin/Dashboard/Dashboard.jsx';
 import Veiculos from './pages/Admin/Veiculos/Veiculos.jsx';
 import PainelViagem from './pages/Motorista/PainelViagem.jsx';
-
+import Register from './pages/Register/Register.jsx';
 // Estilos globais
 import './styles/global.css';
 
@@ -67,6 +67,9 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
+          {/* Rota de Registo (Pública) */}
+          <Route path="/register" element={<Register />} />
 
           {/* ROTAS DO PAINEL DE ADMINISTRAÇÃO */}
           <Route 
