@@ -5,12 +5,13 @@ import { Client } from '@stomp/stompjs';
 import { Bell, Bus, User, Clock, CheckCircle } from 'lucide-react';
 import './PainelEncarregado.css';
 import { format } from 'date-fns';
+import { SimpleStack } from '../../data_structures/SimpleStack';
 
 const PainelEncarregado = () => {
     const { user } = useAuth(); // Assume que o 'user' tem a informação da família
     const [painelData, setPainelData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [notificacoes, setNotificacoes] = useState([]);
+    const [notificacoesStack, setNotificacoesStack] = useState(() => new SimpleStack());
     const stompClientRef = useRef(null);
 
     // EFEITO 1: Carregar os dados estáticos dos filhos e da viagem atual
@@ -19,12 +20,15 @@ const PainelEncarregado = () => {
             try {
                 const data = await encarregadoService.getPainelData();
                 setPainelData(data);
-                // Adiciona uma notificação inicial de "Boas-vindas"
-                setNotificacoes([{ 
-                    id: 'init', 
-                    message: `Sistema conectado. A acompanhar ${data.alunos.length} educando(s).`,
-                    timestamp: new Date()
-                }]);
+                setNotificacoesStack(prevStack =>{
+                    const newStack = new SimpleStack();
+                    newStack.push({
+                        id: 'init', 
+                        message: `Sistema conectado. A acompanhar ${data.alunos.length} educando(s).`,
+                        timestamp: new Date()
+                    });
+                    return newStack;
+                });
             } catch (error) {
                 console.error("Erro ao carregar dados do painel:", error);
             } finally {
@@ -36,7 +40,6 @@ const PainelEncarregado = () => {
 
     // EFEITO 2: Conectar ao WebSocket para receber notificações em tempo real
     useEffect(() => {
-        // Só conecta se tivermos os dados e o ID da família do utilizador logado
         if (!user || !user.familiaId) return;
 
         const wsUrl = `ws://${window.location.host}/ws`;
@@ -49,8 +52,15 @@ const PainelEncarregado = () => {
                 console.log(`Conectado ao WebSocket. A subscrever: ${topic}`);
                 client.subscribe(topic, (message) => {
                     const novaNotificacao = JSON.parse(message.body);
-                    // Adiciona a nova notificação recebida do backend ao topo da lista
-                    setNotificacoes(prev => [{ ...novaNotificacao, id: Date.now() }, ...prev]);
+                    setNotificacoesStack(prevStack => {
+                        const newStack = new SimpleStack();
+                        const oldItems = prevStack.getItems();
+                        for(let i = oldItems.length - 1; i >= 0; i--) {
+                            newStack.push(oldItems[i]);
+                        }
+                        newStack.push({ ...novaNotificacao, id: Date.now() });
+                        return newStack;
+                    });
                 });
             },
         });
@@ -79,14 +89,14 @@ const PainelEncarregado = () => {
                     <Bell size={18} />
                     <h2>Feed de Eventos</h2>
                 </div>
-                {notificacoes.map(notif => (
+                {notificacoesStack.getItems().map(notif => (
                     <div key={notif.id} className="notificacao">
                         <div className="notificacao-icon">
-                            {notif.message.includes('chegou') ? <CheckCircle /> : <Bus />}
+                            {notif.message && notif.message.includes('chegou') ? <CheckCircle /> : <Bus />}
                         </div>
                         <div className="notificacao-conteudo">
                             <p>{notif.message}</p>
-                            <span className="timestamp">{format(new Date(notif.timestamp), 'HH:mm:ss')}</span>
+                            <span className="timestamp">{notif.timestamp ? format(new Date(notif.timestamp), 'HH:mm:ss') : ''}</span>
                         </div>
                     </div>
                 ))}
