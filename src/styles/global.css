@@ -110,3 +110,48 @@ body {
   background-color: #EFF6FF;
   color: var(--primary-color);
 }
+
+/* ==============================================
+   ESTILOS GLOBAIS PARA PÁGINAS DO PAINEL
+   ============================================== */
+
+/* Container principal para cada página */
+.page-container {
+  /* Pode ajustar o max-width se quiser limitar a largura do conteúdo */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Estilo padrão para o cabeçalho das páginas (h1, botão de ação, etc.) */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* Alinha no topo */
+  flex-wrap: wrap;
+  /* Permite que o conteúdo quebre em telas pequenas */
+  gap: 1.5rem;
+  /* Espaçamento entre título e botão */
+
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.page-header h1 {
+  font-size: 1.875rem;
+  /* ~30px */
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.page-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  max-width: 60ch;
+  /* Limita a largura do texto descritivo */
+}

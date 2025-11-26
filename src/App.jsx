@@ -9,8 +9,12 @@ import Veiculos from './pages/Admin/Veiculos/Veiculos.jsx';
 import PainelViagem from './pages/Motorista/PainelViagem.jsx';
 import Register from './pages/Register/Register.jsx';
 import PainelEncarregado from './pages/Encarregado/PainelEncarregado.jsx';
-import Motoristas from  './pages/Motorista/Motorista.jsx';
-import Motoritas from  './pages/Motorista/Motoritas.jsx';
+import Motoristas from './pages/Motorista/Motoristas.jsx';
+//import Motoritas from './pages/Motorista/Motoritas.jsx';
+import Alunos from './pages/Admin/Alunos/Alunos.jsx';
+import Rotas from './pages/Admin/Rotas/Rotas.jsx';
+import Relatorios from './pages/Admin/Relatorios/Relatorios.jsx';
+import Configuracoes from './pages/Admin/Configuracoes/Configuracoes.jsx';
 
 import './styles/global.css';
 
@@ -56,6 +60,10 @@ function AppRoutes() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="veiculos" element={<Veiculos />} />
               <Route path="motoristas" element={<Motoristas />} />
+              <Route path="alunos" element={<Alunos />} />
+              <Route path="rotas" element={<Rotas />} />
+              <Route path="relatorios" element={<Relatorios />} />
+              <Route path="configuracoes" element={<Configuracoes />} />
               <Route path="*" element={<Navigate to="dashboard" replace />} />
             </Route>
           )}

@@ -97,17 +97,20 @@ const PainelViagem = () => {
     }, [statusDaViagem, targetPoint]);
 
 
-    const handleProximoPonto = () => {
+    const handleProximoPonto = async () => {
         if (!targetPoint) return;
 
-        // Adiciona o ponto atual à lista de visitados
-        setPontosVisitados([...pontosVisitados, targetPoint.id]);
+        try {
+            await viagemService.notificarChegada(targetPoint.id);
+            setPontosVisitados([...pontosVisitados, targetPoint.id]);
 
-        if (pontoAtualIndex < drawablePoints.length - 1) {
-            setPontoAtualIndex(pontoAtualIndex + 1);
-        } else {
-            setStatusDaViagem('CONCLUIDA');
-            // ... lógica de terminar viagem
+            if (pontoAtualIndex < drawablePoints.length - 1) {
+                setPontoAtualIndex(pontoAtualIndex + 1);
+            } else {
+                setStatusDaViagem('CONCLUIDA');
+            }
+        } catch (error) {
+            console.error("Não foi possível notificar a chegada:", error);
         }
     };
 
