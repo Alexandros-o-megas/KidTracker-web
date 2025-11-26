@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import {
-  Menu,
-  X,
-  MapPin,
-  Users,
-  Bus,
-  BarChart3,
-  Settings,
-  LogOut,
-  User
-} from 'lucide-react';
+import { Menu, X, Bus, Users, BarChart3, MapPin, Settings, LogOut, User } from 'lucide-react';
 import './AdminLayout.css';
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -39,20 +29,13 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="admin-layout">
-      {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h2>Carrinhas Admin</h2>
-          <button 
-            className="close-btn"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X size={20} />
-          </button>
+          <button onClick={() => setSidebarOpen(false)}><X size={20} /></button>
         </div>
-        
         <nav className="sidebar-nav">
-          {menuItems.map((item) => {
+          {menuItems.map(item => {
             const Icon = item.icon;
             return (
               <Link
@@ -69,41 +52,19 @@ const AdminLayout = ({ children }) => {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <div className="main-content">
-        {/* Header */}
         <header className="header">
           <div className="header-left">
-            <button 
-              className="menu-btn"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu size={24} />
-            </button>
-            <h1>
-              {menuItems.find(item => item.path === location.pathname)?.label || 'Dashboard'}
-            </h1>
+            <button onClick={() => setSidebarOpen(true)}><Menu size={24} /></button>
+            <h1>{menuItems.find(item => item.path === location.pathname)?.label || 'Dashboard'}</h1>
           </div>
-          
           <div className="header-right">
-            <div className="user-info">
-              <span>Olá, {user?.nome}</span>
-              <div className="user-dropdown">
-                <User size={16} />
-                <div className="dropdown-content">
-                  <button onClick={handleLogout} className="logout-btn">
-                    <LogOut size={16} />
-                    Sair
-                  </button>
-                </div>
-              </div>
-            </div>
+            <span>Olá, {user?.nome}</span>
+            <button className="logout-btn" onClick={handleLogout}><LogOut size={16} /> Sair</button>
           </div>
         </header>
-
-        {/* Page Content */}
         <main className="page-content">
-          {children}
+          <Outlet /> {/* Aqui renderiza Dashboard, Veículos, etc */}
         </main>
       </div>
     </div>

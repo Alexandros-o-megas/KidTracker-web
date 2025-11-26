@@ -1,0 +1,60 @@
+.painel-encarregado {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.painel-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.viagem-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.viagem-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.aluno-info,
+.rota-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.map-container {
+    /* O mapa já ocupa o espaço */
+}
+
+.eta-notificacao {
+    padding: 1.5rem;
+}
+
+.eta-notificacao h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.eta-detalhes {
+    display: flex;
+    gap: 2rem;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+.status-viagem {
+    color: var(--text-secondary);
+}

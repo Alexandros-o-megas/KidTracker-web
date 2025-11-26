@@ -1,114 +1,56 @@
-.painel-motorista {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: sans-serif;
+.painel-motorista-grafico {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #0f172a; /* Slate 900 */
+    color: #e2e8f0;
+}
+.svg-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+.map-canvas {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    max-height: 800px;
+}
+.controlos-grafico {
+    padding: 1.5rem;
+    background-color: #1e293b; /* Slate 800 */
+    border-top: 1px solid #334155;
+    text-align: center;
+}
+.controlos-grafico button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.2rem;
+    background-color: #4f46e5; /* Indigo 600 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.painel-header {
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 1rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Animações e Estilos SVG */
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
 }
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  font-weight: 500;
+.van-marker {
+    transition: transform 0.1s linear; /* Movimento suave */
 }
-.status-badge.parado { background-color: #f1f5f9; color: #475569; }
-.status-badge.em-rota { background-color: #dcfce7; color: #166534; animation: pulse 2s infinite; }
-.status-badge.rota-concluída { background-color: #cffafe; color: #0e7490; }
-
-.control-panel {
-  background-color: #f8fafc;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 2rem;
+.animate-dash {
+    animation: dash 1s linear infinite;
 }
-
-.next-stop-info h2 {
-  font-size: 1.25rem;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.next-stop-info .stop-name { font-size: 1.5rem; font-weight: bold; color: var(--primary-color); }
-.eta-details { display: flex; gap: 2rem; margin-top: 0.5rem; color: #64748b; }
-
-.action-buttons { margin-top: 1rem; display: flex; gap: 1rem; }
-.action-buttons button { flex-grow: 1; font-size: 1rem; padding: 0.75rem; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s; }
-.btn-start { background-color: #22c55e; color: white; }
-.btn-stop { background-color: #f97316; color: white; }
-.btn-next { background-color: var(--primary-color); color: white; }
-.btn-start:hover { background-color: #16a34a; }
-.btn-stop:hover { background-color: #ea580c; }
-.btn-next:hover { background-color: var(--primary-dark); }
-
-
-.rota-visualizer .stops-list {
-  position: relative;
-  margin-top: 1rem;
-}
-
-/* A LINHA VERTICAL DO GRAFO */
-.stops-list::before {
-  content: '';
-  position: absolute;
-  left: 21px; /* Alinhado com o centro do ícone */
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background-color: #cbd5e1;
-}
-
-.stop-item {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  position: relative;
-  padding: 0.75rem 0;
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-
-.stop-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1; /* Para ficar à frente da linha */
-  border: 2px solid;
-}
-
-.stop-details h4 { margin: 0; font-size: 1.1rem; }
-.stop-details p { margin: 0; color: #64748b; font-size: 0.9rem; }
-
-/* ESTILOS POR ESTADO */
-.stop-item.completed { opacity: 1; }
-.stop-item.completed .stop-icon { background-color: #dcfce7; color: #16a34a; border-color: #16a34a; }
-
-.stop-item.next { opacity: 1; }
-.stop-item.next .stop-icon { background-color: #dbeafe; color: #2563eb; border-color: #2563eb; animation: pulse 2s infinite; }
-.stop-item.next h4 { color: #2563eb; font-weight: bold; }
-
-.stop-item.pending { opacity: 0.4; }
-.stop-item.pending .stop-icon { background-color: #f1f5f9; color: #94a3b8; border-color: #94a3b8; }
-
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+@keyframes dash {
+    to {
+        stroke-dashoffset: -16;
+    }
 }
