@@ -1,40 +1,39 @@
+/*
+ * --------------------------------
+ * LAYOUT PRINCIPAL E FUNDO
+ * --------------------------------
+ */
 .painel-motorista-grafico {
+    /* Mude para flex-direction: row para ter mapa e sidebar lado a lado */
     display: flex;
-    flex-direction: column;
+    flex-direction: row; 
     height: 100vh;
-    background-color: #0f172a; /* Slate 900 */
-    color: #e2e8f0;
+    background-color: #0f172a; /* Slate-900 */
+    color: #e2e8f0; /* Gray-200 */
+    overflow: hidden; /* Evita scrolls indesejados no container principal */
 }
+
+/*
+ * --------------------------------
+ * ESTILOS DO MAPA (SVG)
+ * --------------------------------
+ */
 .svg-container {
+    /* Ocupa o máximo de espaço horizontal disponível */
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
+    overflow: hidden;
 }
+
 .map-canvas {
     width: 100%;
     height: 100%;
-    max-width: 1200px;
-    max-height: 800px;
-}
-.controlos-grafico {
-    padding: 1.5rem;
-    background-color: #1e293b; /* Slate 800 */
-    border-top: 1px solid #334155;
-    text-align: center;
-}
-.controlos-grafico button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.2rem;
-    background-color: #4f46e5; /* Indigo 600 */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
-/* Animações e Estilos SVG */
+/* Icones dentro dos círculos SVG */
 .icon-wrapper {
     display: flex;
     align-items: center;
@@ -43,9 +42,15 @@
     height: 100%;
     color: white;
 }
+
+/* Animação da Van */
 .van-marker {
-    transition: transform 0.1s linear; /* Movimento suave */
+    transition: transform 0.1s linear; 
+    /* Adiciona uma pequena sombra para destacar a van */
+    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.8));
 }
+
+/* Linha pontilhada animada */
 .animate-dash {
     animation: dash 1s linear infinite;
 }
@@ -53,4 +58,131 @@
     to {
         stroke-dashoffset: -16;
     }
+}
+
+/*
+ * --------------------------------
+ * SIDEBAR DE CONTROLO (NOVA ESTRUTURA)
+ * --------------------------------
+ */
+.sidebar-motorista {
+    width: 380px; /* Aumentado ligeiramente para melhor legibilidade */
+    flex-shrink: 0;
+    background-color: #1e293b; /* Slate-800 */
+    border-left: 1px solid #334155; /* Slate-700 */
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaçamento ligeiramente reduzido */
+    overflow-y: auto; /* Permite scroll se o conteúdo for muito longo */
+}
+
+/* Estilos para os blocos da sidebar */
+.controles, .lista-passageiros, .paragem-atual {
+    background: #0f172a; /* Slate-900 (fundo escuro para contrastar) */
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra subtil */
+}
+
+/* Títulos dos blocos */
+.controles h2, .lista-passageiros h3, .paragem-atual h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8; /* Gray-400 */
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 0.5rem;
+}
+
+/*
+ * --------------------------------
+ * CONTROLOS E BOTÕES
+ * --------------------------------
+ */
+.controles button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.05rem;
+    font-weight: bold;
+    background-color: #4f46e5; /* Indigo-600 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.controles button:hover {
+    background-color: #6366f1; /* Indigo-500 */
+}
+
+.controles h4 {
+    color: #10b981; /* Emerald-500 (para status Concluído) */
+    text-align: center;
+    padding: 0.5rem;
+    border: 1px dashed #10b98150;
+    border-radius: 4px;
+}
+
+/*
+ * --------------------------------
+ * LISTA DE PASSAGEIROS
+ * --------------------------------
+ */
+.lista-passageiros ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px; /* Altura ajustada */
+    overflow-y: auto;
+}
+
+.aluno-abordo {
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #cbd5e1; /* Gray-300 */
+    border-bottom: 1px solid #1e293b;
+    transition: background-color 0.2s;
+}
+
+.aluno-abordo:last-child {
+    border-bottom: none;
+}
+
+.aluno-abordo:hover {
+    background-color: #111827; /* Um tom mais escuro ao passar o rato */
+}
+
+.empty-list {
+    color: #64748b; /* Gray-500 */
+    text-align: center;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+/*
+ * --------------------------------
+ * INFORMAÇÃO DA PARAGEM ATUAL
+ * --------------------------------
+ */
+.paragem-atual p { 
+    font-size: 1.25rem; 
+    font-weight: bold; 
+    margin: 0.5rem 0; 
+    color: #f8fafc; /* White */
+}
+.paragem-atual .detail-info { 
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: #94a3b8; /* Gray-400 */
 }

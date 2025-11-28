@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { viagemService } from '../../services/viagemService.js';
 import { localizacaoService } from '../../services/localizacaoService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { Home, School, CarFront, CheckCircle, Navigation, Radio, Timer } from 'lucide-react';
-import { getDrawablePoints } from '../../utils/mapUtils'; // Importamos o nosso utilitário
-import './PainelViagem.css'; // Usaremos um CSS atualizado
+import { Home, School, CarFront, CheckCircle, Navigation, UserCheck, Users, Timer } from 'lucide-react';
+import { getDrawablePoints } from '../../utils/mapUtils';
+import './PainelViagem.css';
 
 const SVG_WIDTH = 1000;
 const SVG_HEIGHT = 700;
@@ -20,6 +20,9 @@ const PainelViagem = () => {
     const [posicaoVan, setPosicaoVan] = useState({ x: 50, y: SVG_HEIGHT / 2 });
     const watchIdRef = useRef(null);
 
+    const [alunosAbordo, setAlunosAbordo] = useState([]);    
+    const [alunosEntregues, setAlunosEntregues] = useState([]); 
+
     const historyPathString = useMemo(() => {
         if (pontosVisitados.length === 0 || drawablePoints.length === 0) return "";
 
@@ -33,7 +36,6 @@ const PainelViagem = () => {
         return d;
     }, [pontosVisitados, drawablePoints]);
 
-    // Os useEffects também são hooks e devem estar no topo.
     useEffect(() => {
         const fetchViagem = async () => {
             try {
@@ -60,18 +62,13 @@ const PainelViagem = () => {
     const targetPoint = drawablePoints[pontoAtualIndex];
 
     const handleIniciarViagem = async () => {
-        // ... (lógica para chamar a API /api/viagens/{id}/iniciar)
-
+        // Lógica para chamar a API /api/viagens/{id}/iniciar
         setStatusDaViagem('EM_CURSO');
         if ("geolocation" in navigator) {
-            watchIdRef.current = navigator.geolocation.watchPosition((pos) => {
-                // Num sistema real, converteríamos lat/lon do GPS para x/y
-                // Por agora, vamos simular a van a mover-se em direção ao alvo
-            });
+            watchIdRef.current = navigator.geolocation.watchPosition((pos) => {});
         }
     };
 
-    // Simulação do movimento da van
     useEffect(() => {
         if (statusDaViagem !== 'EM_CURSO' || !targetPoint) return;
 
@@ -81,10 +78,8 @@ const PainelViagem = () => {
                 const dy = targetPoint.y - prev.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                // Se estivermos perto o suficiente, paramos
                 if (distance < 5) return prev;
 
-                // Move 5% da distância em cada passo
                 return {
                     x: prev.x + dx * 0.05,
                     y: prev.y + dy * 0.05
@@ -92,27 +87,40 @@ const PainelViagem = () => {
             });
         };
 
-        const interval = setInterval(moveVan, 100); // Atualiza a posição a cada 100ms
+        const interval = setInterval(moveVan, 100); 
         return () => clearInterval(interval);
     }, [statusDaViagem, targetPoint]);
 
-
     const handleProximoPonto = async () => {
-        if (!targetPoint) return;
+        const paragemAtual = drawablePoints[pontoAtualIndex];
+        if (!paragemAtual) return;
 
         try {
-            await viagemService.notificarChegada(targetPoint.id);
-            setPontosVisitados([...pontosVisitados, targetPoint.id]);
-
-            if (pontoAtualIndex < drawablePoints.length - 1) {
-                setPontoAtualIndex(pontoAtualIndex + 1);
-            } else {
-                setStatusDaViagem('CONCLUIDA');
-            }
+            await viagemService.notificarChegada(paragemAtual.id);
         } catch (error) {
-            console.error("Não foi possível notificar a chegada:", error);
+            console.error("Não foi possível notificar chegada:", error);
+        }
+
+        const ehEscola = paragemAtual.label.toLowerCase().includes('escola'); 
+
+        if (ehEscola) {
+            setAlunosEntregues(prev => [...prev, ...alunosAbordo]);
+            setAlunosAbordo([]);
+            
+            setStatusDaViagem('CONCLUIDA');
+            if (watchIdRef.current !== null) {
+                navigator.geolocation.clearWatch(watchIdRef.current);
+            }
+        } else {
+            setAlunosAbordo(prevAbordo => [...prevAbordo, ...paragemAtual.alunos]);
+        }
+
+        setPontosVisitados(prev => [...prev, paragemAtual.id]);
+        if (pontoAtualIndex < drawablePoints.length - 1) {
+            setPontoAtualIndex(pontoAtualIndex + 1);
         }
     };
+
 
     if (loading) return <div className="loading-screen">A carregar dados...</div>;
     if (!viagem || drawablePoints.length === 0) return <div>Nenhuma viagem válida encontrada.</div>;
@@ -161,7 +169,7 @@ const PainelViagem = () => {
                                     {point.label}
                                 </text>
                                 <text y="65" textAnchor="middle" fill="#64748b" fontSize="12">
-                                    {isVisited ? "Alcançado" : (isTarget ? `ETA: 5 min` : "")}
+                                    {isVisited ? "Alcançado" : (isTarget ? `Alunos: ${point.alunos.length}` : "")}
                                 </text>
                             </g>
                         );
@@ -181,13 +189,43 @@ const PainelViagem = () => {
                 </svg>
             </div>
 
-            <div className="controlos-grafico">
-                <h2>Progresso da Rota</h2>
-                {statusDaViagem === 'AGENDADA' && <button onClick={handleIniciarViagem}>Iniciar Viagem</button>}
-                {statusDaViagem === 'EM_CURSO' && <button onClick={handleProximoPonto}>Cheguei / Próxima Paragem</button>}
-                {statusDaViagem === 'CONCLUIDA' && <p>Viagem Concluída!</p>}
-                {targetPoint && <p>Próximo Destino: <strong>{targetPoint.label}</strong></p>}
-            </div>
+            <aside className="sidebar-motorista">
+                <div className="controles">
+                    <h2>Controlo da Viagem</h2>
+                    {statusDaViagem === 'AGENDADA' && <button onClick={handleIniciarViagem}><Navigation size={18} /> Iniciar Viagem</button>}
+                    {statusDaViagem === 'EM_CURSO' && <button onClick={handleProximoPonto}><Timer size={18} /> Cheguei / Próxima Paragem</button>}
+                    {statusDaViagem === 'CONCLUIDA' && <h4><CheckCircle size={18} /> Viagem Concluída!</h4>}
+                </div>
+                
+                <hr />
+
+                <div className="paragem-atual">
+                    <h3>Próximo Destino</h3>
+                    {targetPoint ? (
+                        <>
+                           <p><strong>{targetPoint.label}</strong></p>
+                           <p className="detail-info">Aguardando embarque de **{targetPoint.alunos.length}** alunos.</p>
+                        </>
+                    ) : (
+                        <p>Fim da rota.</p>
+                    )}
+                </div>
+
+                <hr />
+
+                <div className="lista-passageiros">
+                    <h3><Users size={18}/> Alunos a Bordo ({alunosAbordo.length})</h3>
+                    <ul>
+                        {alunosAbordo.map(aluno => (
+                            // Assumimos que cada aluno tem um 'id' e 'nome'
+                            <li key={aluno.id} className="aluno-abordo">
+                                <UserCheck size={16} /> {aluno.nome}
+                            </li>
+                        ))}
+                        {alunosAbordo.length === 0 && <li className="empty-list">Nenhum aluno a bordo.</li>}
+                    </ul>
+                </div>
+            </aside>
         </div>
     );
 };
