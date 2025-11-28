@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../context/AuthContext'; // Para obter dados da família
+import { useAuth } from '../../context/AuthContext';
 import { encarregadoService } from '../../services/encarregadoService';
 import { Client } from '@stomp/stompjs';
 import { Bell, Bus, User, Clock, CheckCircle } from 'lucide-react';
@@ -8,14 +8,14 @@ import { format } from 'date-fns';
 import { SimpleStack } from '../../data_structures/SimpleStack';
 
 const PainelEncarregado = () => {
-    const { user } = useAuth(); // Assume que o 'user' tem a informação da família
+    const { user } = useAuth();
     const [painelData, setPainelData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [notificacoesStack, setNotificacoesStack] = useState(() => new SimpleStack());
+    const [etas, setEtas] = useState({});
     const stompClientRef = useRef(null);
 
-    // EFEITO 1: Carregar os dados estáticos dos filhos e da viagem atual
-    useEffect(() => {
+   useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await encarregadoService.getPainelData();
@@ -38,9 +38,17 @@ const PainelEncarregado = () => {
         fetchData();
     }, []);
 
-    // EFEITO 2: Conectar ao WebSocket para receber notificações em tempo real
     useEffect(() => {
-        if (!user || !user.familiaId) return;
+        if (!user || !user.familiaId ||  stompClientRef.current) return;
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error("Token de autenticação não encontrado.");
+            return;
+        }
+
+        console.log("A iniciar ligação WebSocket...");
 
         const wsUrl = `ws://${window.location.host}/ws`;
         const topic = `/topic/familia/${user.familiaId}`;
@@ -48,28 +56,56 @@ const PainelEncarregado = () => {
         const client = new Client({
             brokerURL: wsUrl,
             reconnectDelay: 5000,
+
+            connectHeaders: {
+                Authorization: `Bearer ${token}`,
+            },
+
             onConnect: () => {
                 console.log(`Conectado ao WebSocket. A subscrever: ${topic}`);
                 client.subscribe(topic, (message) => {
                     const novaNotificacao = JSON.parse(message.body);
-                    setNotificacoesStack(prevStack => {
-                        const newStack = new SimpleStack();
-                        const oldItems = prevStack.getItems();
-                        for(let i = oldItems.length - 1; i >= 0; i--) {
-                            newStack.push(oldItems[i]);
-                        }
-                        newStack.push({ ...novaNotificacao, id: Date.now() });
-                        return newStack;
-                    });
+                    if (novaNotificacao.tempoEstimado){
+                        setEtas(prevEtas => ({
+                            ...prevEtas,
+                            [novaNotificacao.alunoNome]: {
+                                distancia: novaNotificacao.distanciaKm,
+                                tempo: novaNotificacao.tempoEstimado,
+                            }
+                        }));
+                        return;
+                    } else {
+                        setNotificacoesStack(prevStack => {
+                            const newStack = new SimpleStack();
+                            const oldItems = prevStack.getItems();
+                            for(let i = oldItems.length - 1; i >= 0; i--) {
+                                newStack.push(oldItems[i]);
+                            }
+                            newStack.push({ ...novaNotificacao, id: Date.now() });
+                            return newStack;
+                        });
+                    }
                 });
+                console.log('Subscrito com sucesso ao topico: ${topic}');
             },
+            onStompError: (frame) => {
+                console.error('Erro no STOMP:', frame.headers['message']);
+                console.error('Detalhes adicionais:', frame.body);
+            },
+            onWebSocketError: (error) => {
+                console.error('Erro no WebSocket:', error);
+            }
         });
 
         client.activate();
         stompClientRef.current = client;
 
         return () => {
-            if (stompClientRef.current) stompClientRef.current.deactivate();
+            if (stompClientRef.current) { 
+                stompClientRef.current.deactivate();
+                stompClientRef.current = null;
+                console.log("Ligação WebSocket encerrada.");
+            }  
         };
     }, [user]);
 
@@ -102,7 +138,7 @@ const PainelEncarregado = () => {
                 ))}
             </div>
             
-            {/* INFORMAÇÃO DOS FILHOS E ETA */}
+            {/* INFORMAÇÃO DOS FILHOS E ETA(Tempo estimado de chegada) */}
             <div className="lista-alunos">
                  {painelData.alunos.map(aluno => (
                     <div key={aluno.nomeAluno} className="card-aluno">
